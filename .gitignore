@@ -1,0 +1,61 @@
+# General
+.DS_Store
+*.log
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.iml
+
+# Backend (Java/Maven)
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/.springBeans
+backend/application-local.properties
+
+# Frontend (Node.js)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+*.iml
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+*.jar
+*.war
+*.ear
+*.class
+
+# Logs
+logs/
+*.log
+
