@@ -110,6 +110,73 @@ backend/
 - ✅ **Escalabilidad**: Fácil agregar nuevas features
 - ✅ **Mantenibilidad**: Código más fácil de encontrar y modificar
 
+### Orden de Desarrollo (Arquitectura Hexagonal + Vertical Slicing)
+
+Al implementar una nueva feature (por ejemplo, `dogs/` o `cats/`), sigue este orden lógico de creación de clases e interfaces, de adentro hacia afuera:
+
+#### 1. **Domain Layer** (Núcleo del negocio)
+   - **Entidades de dominio** (`domain/entity/`):
+     - Crear las clases que representan los conceptos del negocio
+     - Ejemplo: `DogImage.java`, `DogBreed.java`
+   - **Excepciones de dominio** (`domain/exception/`):
+     - Crear excepciones específicas del dominio
+     - Ejemplo: `DogImageNotFoundException.java`, `DogBreedNotFoundException.java`
+
+#### 2. **Ports Out** (Interfaces de salida)
+   - **Interfaces para servicios externos** (`application/port/out/`):
+     - Definir contratos para interactuar con APIs externas o bases de datos
+     - Ejemplo: `DogApiPort.java` (define métodos como `getRandomImage()`, `getAllBreeds()`)
+
+#### 3. **Adapters Out** (Implementaciones de salida)
+   - **Clientes de APIs externas** (`infrastructure/adapter/out/`):
+     - Implementar las interfaces de `port/out`
+     - Ejemplo: `DogApiClient.java` (implementa `DogApiPort`, hace llamadas HTTP reales)
+   - **DTOs de respuesta** (si es necesario):
+     - Crear clases para mapear respuestas de APIs externas
+     - Ejemplo: `DogApiResponse.java`
+
+#### 4. **Ports In** (Casos de uso)
+   - **Interfaces de casos de uso** (`application/port/in/`):
+     - Definir los casos de uso de la aplicación
+     - Ejemplo: `GetDogImagesUseCase.java`, `GetDogBreedsUseCase.java`, `FilterDogImagesByBreedUseCase.java`
+
+#### 5. **Services** (Implementaciones de casos de uso)
+   - **Servicios de aplicación** (`application/service/`):
+     - Implementar las interfaces de `port/in`
+     - Delegar a `port/out` para obtener datos
+     - Ejemplo: `GetDogImagesService.java` (implementa `GetDogImagesUseCase`, usa `DogApiPort`)
+
+#### 6. **Adapters In** (Controladores REST)
+   - **REST Controllers** (`infrastructure/adapter/in/`):
+     - Exponer endpoints HTTP
+     - Usar los casos de uso (`port/in`) para ejecutar lógica
+     - Ejemplo: `DogController.java` (expone `/api/dogs/*`, usa `GetDogImagesUseCase`)
+
+#### 7. **Exception Handlers** (Manejo de errores)
+   - **Manejadores globales de excepciones** (`infrastructure/adapter/in/`):
+     - Centralizar el manejo de excepciones
+     - Convertir excepciones de dominio a respuestas HTTP
+     - Ejemplo: `DogExceptionHandler.java` (usa `@ControllerAdvice`)
+
+#### Resumen del flujo:
+```
+Domain (entidades) 
+  ↓
+Ports Out (interfaces externas) 
+  ↓
+Adapters Out (implementaciones externas)
+  ↓
+Ports In (casos de uso)
+  ↓
+Services (implementaciones de casos de uso)
+  ↓
+Adapters In (controllers)
+  ↓
+Exception Handlers (manejo de errores)
+```
+
+**Principio clave**: Siempre desarrollar de adentro hacia afuera. El dominio no debe conocer nada de infraestructura, pero la infraestructura depende del dominio.
+
 ### Frontend
 
 ```
