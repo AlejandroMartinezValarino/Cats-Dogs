@@ -1,6 +1,6 @@
 # Pet Gallery - Cats & Dogs
 
-Aplicación web para visualizar y filtrar imágenes de perros y gatos utilizando APIs externas. El proyecto está construido con **Java Spring Boot** (backend) y **React con Ant Design** (frontend), siguiendo principios **SOLID** y arquitectura hexagonal.
+Aplicación web full-stack para visualizar y filtrar imágenes de perros y gatos utilizando APIs externas. El proyecto está construido con **Java Spring Boot** (backend) y **React con Ant Design** (frontend), siguiendo principios **SOLID** y arquitectura hexagonal con **Vertical Slicing**.
 
 ## 📋 Descripción
 
@@ -17,18 +17,18 @@ El proyecto está dividido en dos servicios independientes:
 
 ```
 pet-gallery-project/
-├── backend/          # API REST con Spring Boot (Arquitectura Hexagonal)
+├── backend/          # API REST con Spring Boot (Arquitectura Hexagonal + Vertical Slicing)
 ├── frontend/         # Aplicación React con Ant Design
-└── features/         # Especificaciones BDD en formato Gherkin
+└── features/         # Especificaciones BDD en formato Gherkin (uso interno)
 ```
 
 ### Backend
-- **Tecnología**: Java 17 + Spring Boot 3.2.0
-- **Arquitectura**: Hexagonal (Ports & Adapters)
+- **Tecnología**: Java 21 + Spring Boot 3.2.0
+- **Arquitectura**: Hexagonal (Ports & Adapters) + Vertical Slicing (Screaming Architecture)
 - **Principios**: SOLID
 - **APIs Externas**: 
-  - [The Dog API](https://docs.thedogapi.com/)
-  - [Cats API](https://publicapi.dev/cats-api)
+  - [Dog CEO API](https://dog.ceo/dog-api/) - API gratuita y open source para imágenes de perros
+  - [The Cat API](https://thecatapi.com/) - API para imágenes y datos de gatos
 
 ### Frontend
 - **Tecnología**: React 18 + Vite
@@ -41,9 +41,9 @@ pet-gallery-project/
 ### Prerrequisitos
 
 - **Backend**:
-  - Java 17 o superior
+  - Java 21 o superior
   - Maven 3.6+
-  - API Key de [The Dog API](https://thedogapi.com/)
+  - No se requieren API keys (las APIs utilizadas son gratuitas)
 
 - **Frontend**:
   - Node.js 18+ y npm
@@ -59,72 +59,56 @@ cd Cats&Dogs
 2. **Configurar Backend**:
 ```bash
 cd backend
-# Copiar y configurar variables de entorno
-cp .env.example .env
-# Editar .env con tus API keys
 mvn clean install
 mvn spring-boot:run
 ```
 
+El backend estará disponible en `http://localhost:8080`
+
 3. **Configurar Frontend**:
 ```bash
 cd frontend
-# Copiar y configurar variables de entorno
-cp .env.example .env
-# Editar .env con la URL del backend
 npm install
 npm run dev
 ```
 
-El backend estará disponible en `http://localhost:8080` y el frontend en `http://localhost:3000`.
-
-## 🚂 Despliegue en Railway
-
-El proyecto está configurado para desplegarse en Railway como dos servicios separados:
-
-### Backend Service
-1. Conectar el repositorio a Railway
-2. Seleccionar el directorio `backend/`
-3. Railway detectará automáticamente Java/Maven
-4. Configurar variables de entorno:
-   - `DOG_API_KEY`: Tu API key de The Dog API
-   - `CAT_API_KEY`: (Opcional) API key de Cats API
-   - `SERVER_PORT`: Puerto del servidor (Railway lo asigna automáticamente)
-   - `CORS_ALLOWED_ORIGINS`: URL del frontend en Railway
-
-### Frontend Service
-1. Crear un nuevo servicio en Railway
-2. Seleccionar el directorio `frontend/`
-3. Railway detectará automáticamente Node.js
-4. Configurar variables de entorno:
-   - `VITE_API_URL`: URL del backend desplegado en Railway
-
-**Nota**: Al modificar solo el frontend, Railway solo reconstruirá el servicio frontend, manteniendo el backend intacto.
+El frontend estará disponible en `http://localhost:3000`
 
 ## 📁 Estructura del Proyecto
 
-### Backend (Arquitectura Hexagonal)
+### Backend (Arquitectura Hexagonal + Vertical Slicing)
+
+El backend utiliza una combinación de **Vertical Slicing** (organización por features) y **Arquitectura Hexagonal** (separación de concerns):
 
 ```
 backend/
 ├── src/main/java/com/pets/
-│   ├── application/          # Capa de aplicación
-│   │   ├── port/
-│   │   │   ├── in/           # Puertos de entrada (casos de uso)
-│   │   │   └── out/          # Puertos de salida (interfaces externas)
-│   │   └── service/          # Implementación de casos de uso
-│   ├── domain/               # Capa de dominio
-│   │   ├── model/            # Entidades de dominio
-│   │   └── exception/        # Excepciones de dominio
-│   └── infrastructure/       # Capa de infraestructura
-│       ├── adapter/
-│       │   ├── in/           # Adaptadores de entrada (REST Controllers)
-│       │   ├── out/          # Adaptadores de salida (API Clients)
-│       │   └── config/       # Configuraciones
-│       └── client/            # Clientes HTTP
+│   ├── dogs/                     # Feature: Perros
+│   │   ├── application/
+│   │   │   ├── port/
+│   │   │   │   ├── in/          # Casos de uso (interfaces)
+│   │   │   │   └── out/         # Interfaces externas
+│   │   │   └── service/         # Implementación casos de uso
+│   │   ├── domain/
+│   │   │   ├── entity/          # Entidades de dominio
+│   │   │   └── exception/       # Excepciones de dominio
+│   │   └── infrastructure/
+│   │       └── adapter/
+│   │           ├── in/          # REST Controllers
+│   │           └── out/         # API Clients
+│   ├── cats/                     # Feature: Gatos
+│   │   └── [misma estructura]
+│   └── shared/                   # Código compartido
+│       └── config/              # Configuraciones globales
 └── src/main/resources/
     └── application.properties
 ```
+
+**Ventajas de esta arquitectura**:
+- ✅ **Mejor cohesión**: Todo lo relacionado con una feature está junto
+- ✅ **Independencia**: Cada feature puede evolucionar sin afectar a otras
+- ✅ **Escalabilidad**: Fácil agregar nuevas features
+- ✅ **Mantenibilidad**: Código más fácil de encontrar y modificar
 
 ### Frontend
 
@@ -141,35 +125,6 @@ frontend/
 └── package.json
 ```
 
-## 🧪 Testing
-
-Las especificaciones de comportamiento están definidas en formato Gherkin en el directorio `features/`:
-
-- `01_visualizacion_inicial_imagenes.feature`
-- `02_cambio_tipo_mascota.feature`
-- `03_listado_razas_disponibles.feature`
-- `04_filtrado_imagenes_por_raza.feature`
-- `05_busqueda_razas.feature`
-- `06_visualizacion_detalles_raza.feature`
-- `07_manejo_errores_estados_carga.feature`
-- `08_paginacion_imagenes.feature`
-
-## 📚 Documentación Adicional
-
-- [README del Backend](./backend/README.md) - Documentación técnica del backend
-- [README del Frontend](./frontend/README.md) - Documentación técnica del frontend
-
-## 🔧 Variables de Entorno
-
-### Backend
-- `DOG_API_KEY`: API key de The Dog API (requerido)
-- `CAT_API_KEY`: API key de Cats API (opcional)
-- `SERVER_PORT`: Puerto del servidor (default: 8080)
-- `CORS_ALLOWED_ORIGINS`: Orígenes permitidos para CORS
-
-### Frontend
-- `VITE_API_URL`: URL del backend (default: http://localhost:8080/api)
-
 ## 🎯 Principios SOLID Aplicados
 
 - **S (Single Responsibility)**: Cada clase tiene una única responsabilidad
@@ -178,11 +133,58 @@ Las especificaciones de comportamiento están definidas en formato Gherkin en el
 - **I (Interface Segregation)**: Interfaces segregadas (ports in/out)
 - **D (Dependency Inversion)**: Dependencias hacia abstracciones
 
+## 📡 Endpoints del Backend
+
+### Perros (Dogs)
+- `GET /api/dogs/images/random` - Obtiene una imagen aleatoria
+- `GET /api/dogs/images/random/list?limit=5` - Obtiene múltiples imágenes aleatorias
+- `GET /api/dogs/breeds` - Obtiene todas las razas disponibles
+- `GET /api/dogs/images?breed=afghan` - Obtiene imágenes por raza
+- `GET /api/dogs/images?breed=airedale&subBreed=terrier` - Obtiene imágenes por subraza
+
+### Gatos (Cats)
+- *(En desarrollo)*
+
+## 🔧 Tecnologías y Herramientas
+
+### Backend
+- **Java 21** - Lenguaje de programación
+- **Spring Boot 3.2.0** - Framework de aplicación
+- **Maven** - Gestor de dependencias
+- **Lombok** - Reducción de boilerplate
+- **Jackson** - Serialización/deserialización JSON
+- **RestTemplate** - Cliente HTTP
+
+### Frontend
+- **React 18** - Biblioteca de UI
+- **Vite** - Build tool y dev server
+- **Ant Design 5** - Framework de componentes UI
+- **Axios** - Cliente HTTP
+- **React Router DOM** - Enrutamiento
+
+## 📚 Documentación Adicional
+
+- [README del Backend](./backend/README.md) - Documentación técnica detallada del backend
+- [README del Frontend](./frontend/README.md) - Documentación técnica del frontend
+
+## 🧪 Testing
+
+El proyecto incluye especificaciones de comportamiento en formato Gherkin (BDD) para guiar el desarrollo y las pruebas.
+
+## 🚀 Estado del Proyecto
+
+- ✅ Backend: Feature de perros implementada y funcionando
+- 🚧 Frontend: Estructura base creada, pendiente de implementación
+- 🚧 Backend: Feature de gatos pendiente de implementación
+
 ## 📝 Licencia
 
 Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 
-## 👥 Contribución
+## 👤 Autor
 
-Las contribuciones son bienvenidas. Por favor, asegúrate de seguir los principios SOLID y mantener la arquitectura hexagonal.
-
+Desarrollado como proyecto de portfolio para demostrar habilidades en:
+- Arquitectura de software (Hexagonal + Vertical Slicing)
+- Principios SOLID
+- Desarrollo full-stack (Java + React)
+- Buenas prácticas de desarrollo

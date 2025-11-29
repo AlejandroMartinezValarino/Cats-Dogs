@@ -1,6 +1,6 @@
 # Pet Gallery Backend
 
-API REST desarrollada con **Spring Boot 3.2.0** y **Java 17**, siguiendo **Arquitectura Vertical (Screaming Architecture)** combinada con **Arquitectura Hexagonal** y principios SOLID.
+API REST desarrollada con **Spring Boot 3.2.0** y **Java 21**, siguiendo **Arquitectura Vertical (Screaming Architecture)** combinada con **Arquitectura Hexagonal** y principios SOLID.
 
 ## 🏗️ Arquitectura
 
@@ -33,7 +33,7 @@ com.pets
 │   │       ├── GetDogBreedsService
 │   │       └── FilterDogImagesService
 │   ├── domain/              # Entidades y lógica de dominio
-│   │   ├── model/
+│   │   ├── entity/
 │   │   │   ├── DogImage
 │   │   │   └── DogBreed
 │   │   └── exception/
@@ -60,7 +60,7 @@ com.pets
 │   │       ├── GetCatBreedsService
 │   │       └── FilterCatImagesService
 │   ├── domain/
-│   │   ├── model/
+│   │   ├── entity/
 │   │   │   ├── CatImage
 │   │   │   └── CatBreed
 │   │   └── exception/
@@ -85,24 +85,18 @@ com.pets
 
 ### Prerrequisitos
 
-- Java 17 o superior
+- Java 21 o superior
 - Maven 3.6+
-- API Key de [The Dog API](https://thedogapi.com/)
+- No se requieren API keys (las APIs utilizadas son gratuitas)
 
 ### Configuración
 
-1. **Clonar y configurar variables de entorno**:
-```bash
-cp .env.example .env
-# Editar .env con tus API keys
-```
-
-2. **Compilar el proyecto**:
+1. **Compilar el proyecto**:
 ```bash
 mvn clean install
 ```
 
-3. **Ejecutar la aplicación**:
+2. **Ejecutar la aplicación**:
 ```bash
 mvn spring-boot:run
 ```
@@ -111,34 +105,36 @@ La API estará disponible en `http://localhost:8080`
 
 ## 📡 Endpoints
 
-### Imágenes
+### Perros (Dogs)
 
-- `GET /api/images?type={dogs|cats}&limit={number}&page={number}`
-  - Obtiene imágenes aleatorias de perros o gatos
+#### Imágenes
+- `GET /api/dogs/images/random`
+  - Obtiene una imagen aleatoria de perro
+  - Respuesta: `{"url": "...", "breed": null}`
+
+- `GET /api/dogs/images/random/list?limit=5`
+  - Obtiene múltiples imágenes aleatorias
   - Query params:
-    - `type`: Tipo de mascota (dogs/cats)
-    - `limit`: Número de imágenes (default: 10, max: 25)
-    - `page`: Número de página (default: 0)
+    - `limit`: Número de imágenes (default: 10, max: 50)
 
-- `GET /api/images?type={dogs|cats}&breedId={breedId}`
+- `GET /api/dogs/images?breed=afghan`
   - Obtiene imágenes filtradas por raza
   - Query params:
-    - `type`: Tipo de mascota (dogs/cats)
-    - `breedId`: ID de la raza
+    - `breed`: Nombre de la raza (requerido)
 
-### Razas
+- `GET /api/dogs/images?breed=airedale&subBreed=terrier`
+  - Obtiene imágenes filtradas por subraza
+  - Query params:
+    - `breed`: Nombre de la raza (requerido)
+    - `subBreed`: Nombre de la subraza (requerido)
 
-- `GET /api/breeds?type={dogs|cats}`
+#### Razas
+- `GET /api/dogs/breeds`
   - Obtiene todas las razas disponibles
-  - Query params:
-    - `type`: Tipo de mascota (dogs/cats)
+  - Respuesta: Lista de `DogBreed` con nombre y sub-razas
 
-- `GET /api/breeds/{breedId}?type={dogs|cats}`
-  - Obtiene detalles de una raza específica
-  - Path params:
-    - `breedId`: ID de la raza
-  - Query params:
-    - `type`: Tipo de mascota (dogs/cats)
+### Gatos (Cats)
+- *(En desarrollo)*
 
 ## 🔧 Configuración
 
@@ -148,11 +144,9 @@ La API estará disponible en `http://localhost:8080`
 # Server
 server.port=${SERVER_PORT:8080}
 
-# API Keys
-dog.api.key=${DOG_API_KEY}
-dog.api.url=https://api.thedogapi.com/v1
-cat.api.key=${CAT_API_KEY:}
-cat.api.url=https://api.publicapis.org/entries?category=animals
+# API URLs (no se requieren API keys)
+dog.api.url=https://dog.ceo/api/breeds
+cat.api.url=https://api.thecatapi.com/v1
 
 # CORS
 cors.allowed.origins=${CORS_ALLOWED_ORIGINS:http://localhost:3000}
@@ -160,10 +154,10 @@ cors.allowed.origins=${CORS_ALLOWED_ORIGINS:http://localhost:3000}
 
 ### Variables de Entorno
 
-- `DOG_API_KEY` (requerido): API key de The Dog API
-- `CAT_API_KEY` (opcional): API key de Cats API
 - `SERVER_PORT` (opcional): Puerto del servidor (default: 8080)
-- `CORS_ALLOWED_ORIGINS` (opcional): Orígenes permitidos para CORS
+- `CORS_ALLOWED_ORIGINS` (opcional): Orígenes permitidos para CORS (default: http://localhost:3000)
+
+**Nota**: Las APIs utilizadas ([Dog CEO API](https://dog.ceo/dog-api/) y [The Cat API](https://thecatapi.com/)) son gratuitas y no requieren API keys para uso básico.
 
 ## 🧪 Testing
 
@@ -178,6 +172,7 @@ mvn test
 - **Spring Boot Starter Validation**: Validación de datos
 - **Lombok**: Reducción de boilerplate
 - **Jackson**: Serialización/deserialización JSON
+- **RestTemplate**: Cliente HTTP para comunicación con APIs externas
 
 ## 🎯 Principios SOLID Implementados
 
@@ -185,7 +180,7 @@ mvn test
 Cada clase tiene una única responsabilidad:
 - `DogController`: Solo maneja peticiones HTTP de perros
 - `GetDogImagesService`: Solo implementa la lógica de obtener imágenes de perros
-- `DogApiClient`: Solo se comunica con The Dog API
+- `DogApiClient`: Solo se comunica con Dog CEO API
 
 ### Open/Closed Principle (OCP)
 Las interfaces permiten extensión sin modificación:
@@ -210,17 +205,23 @@ Dependencias hacia abstracciones:
 - Las implementaciones concretas se inyectan mediante Spring
 - Las features no dependen entre sí, solo de `shared`
 
-## 🚂 Despliegue en Railway
+## 🔌 APIs Externas Utilizadas
 
-1. Conectar el repositorio a Railway
-2. Seleccionar el directorio `backend/`
-3. Railway detectará automáticamente Java/Maven
-4. Configurar variables de entorno en Railway:
-   - `DOG_API_KEY`
-   - `CAT_API_KEY` (opcional)
-   - `CORS_ALLOWED_ORIGINS` (URL del frontend)
+### Dog CEO API
+- **URL**: https://dog.ceo/dog-api/
+- **Tipo**: API gratuita y open source
+- **Características**: 
+  - No requiere API key
+  - Proporciona imágenes de perros y listas de razas
+  - Endpoints REST simples y directos
 
-Railway asignará automáticamente el puerto y la URL del servicio.
+### The Cat API
+- **URL**: https://thecatapi.com/
+- **Tipo**: API gratuita (con opciones premium)
+- **Características**:
+  - Uso básico sin API key
+  - Proporciona imágenes de gatos y datos detallados de razas
+  - Información completa sobre características de razas
 
 ## 📝 Notas de Desarrollo
 
@@ -231,4 +232,11 @@ Railway asignará automáticamente el puerto y la URL del servicio.
 - Las APIs externas están abstraídas mediante ports
 - Cada feature es independiente: cambios en `dogs/` no afectan `cats/`
 - El código compartido está en `shared/` para evitar duplicación
+- **Manejo de excepciones**: Centralizado mediante `@ControllerAdvice` para respuestas HTTP consistentes
 
+## 🚀 Estado del Proyecto
+
+- ✅ Feature de perros: Completamente implementada y funcionando
+- 🚧 Feature de gatos: Estructura creada, pendiente de implementación
+- ✅ Manejo de excepciones: Implementado con `DogExceptionHandler`
+- ✅ CORS configurado: Listo para integración con frontend
