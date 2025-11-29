@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import com.pets.dogs.domain.exception.DogBreedNotFoundException;
 import com.pets.dogs.domain.exception.DogImageNotFoundException;
 import com.pets.dogs.domain.exception.DogApiException;
+import com.pets.shared.exception.ErrorResponse;
 
 @ControllerAdvice
 public class DogExceptionHandler {

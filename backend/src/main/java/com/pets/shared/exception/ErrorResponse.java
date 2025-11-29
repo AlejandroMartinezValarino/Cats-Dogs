@@ -1,4 +1,4 @@
-package com.pets.dogs.infrastructure.adapter.in;
+package com.pets.shared.exception;
 
 import lombok.Data;
 import lombok.AllArgsConstructor;

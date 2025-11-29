@@ -91,13 +91,28 @@ com.pets
 
 ### Configuración
 
+**Importante**: Este proyecto requiere **Java 21**. Si tu sistema tiene múltiples versiones de Java instaladas, asegúrate de que Maven use Java 21.
+
+#### Opción 1: Usar el script wrapper (Recomendado)
+El proyecto incluye un script `mvnw` que configura automáticamente Java 21:
+
 1. **Compilar el proyecto**:
 ```bash
-mvn clean install
+./mvnw clean install
 ```
 
 2. **Ejecutar la aplicación**:
 ```bash
+./mvnw spring-boot:run
+```
+
+#### Opción 2: Configurar JAVA_HOME manualmente
+Si prefieres usar `mvn` directamente, configura `JAVA_HOME` antes de ejecutar:
+
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+export PATH=$JAVA_HOME/bin:$PATH
+mvn clean install
 mvn spring-boot:run
 ```
 
@@ -162,6 +177,11 @@ cors.allowed.origins=${CORS_ALLOWED_ORIGINS:http://localhost:3000}
 ## 🧪 Testing
 
 Ejecutar tests:
+```bash
+./mvnw test
+```
+
+O con `mvn` (si JAVA_HOME está configurado):
 ```bash
 mvn test
 ```
