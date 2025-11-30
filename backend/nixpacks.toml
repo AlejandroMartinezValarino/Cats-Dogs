@@ -3,12 +3,13 @@ nixPkgs = ["maven", "jdk21"]
 
 [phases.build]
 cmds = [
-  "chmod +x ./mvnw",
+  "chmod +x ./mvnw || true",
   "./mvnw clean package -DskipTests"
 ]
 
 [phases.start]
-cmd = "java -jar target/pet-gallery-backend-1.0.0.jar"
+# Usar el script de inicio que busca el JAR automáticamente
+cmd = "./start.sh"
 
 [variables]
 # Railway asigna PORT automáticamente, no configurar SERVER_PORT
