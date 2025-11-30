@@ -57,17 +57,9 @@ public class DogController {
     }
 
     /**
-     * Obtiene una lista de imágenes de un perro por raza
-     * @param breed Raza de perro
-     * @return Lista de imágenes de un perro por raza
-     */
-    @GetMapping("breeds/{breed}")
-    public ResponseEntity<List<DogImage>> getDogImagesByBreed(@PathVariable String breed) {
-        return ResponseEntity.ok(filterDogImageByBreedUseCase.filterImagesByBreed(breed));
-    }
-
-    /**
      * Obtiene una lista de imágenes de un perro por subraza
+     * IMPORTANTE: Este endpoint debe estar ANTES del endpoint de raza simple
+     * para que Spring Boot pueda distinguir correctamente las rutas
      * @param breed Raza de perro
      * @param subBreed Subraza de perro
      * @return Lista de imágenes de un perro por subraza
@@ -75,5 +67,15 @@ public class DogController {
     @GetMapping("breeds/{breed}/{subBreed}")
     public ResponseEntity<List<DogImage>> getDogImagesBySubBreed(@PathVariable String breed, @PathVariable String subBreed) {
         return ResponseEntity.ok(filterDogImageByBreedUseCase.filterImagesBySubBreed(breed, subBreed));
+    }
+
+    /**
+     * Obtiene una lista de imágenes de un perro por raza
+     * @param breed Raza de perro
+     * @return Lista de imágenes de un perro por raza
+     */
+    @GetMapping("breeds/{breed}")
+    public ResponseEntity<List<DogImage>> getDogImagesByBreed(@PathVariable String breed) {
+        return ResponseEntity.ok(filterDogImageByBreedUseCase.filterImagesByBreed(breed));
     }
 }

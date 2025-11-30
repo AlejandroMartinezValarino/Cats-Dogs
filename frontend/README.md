@@ -1,6 +1,10 @@
 # Pet Gallery Frontend
 
-Aplicación web desarrollada con **React 18**, **Vite**, y **Ant Design 5** para visualizar y filtrar imágenes de perros y gatos.
+Aplicación web desarrollada con **React 18**, **Vite**, y **Ant Design 6** para visualizar y filtrar imágenes de perros y gatos.
+
+## 📝 Nota sobre el Desarrollo
+
+Este frontend fue desarrollado con **asistencia de IA** para agilizar el proceso de implementación. El objetivo principal del proyecto es la práctica de arquitectura hexagonal y principios SOLID en el backend, por lo que se utilizó asistencia tecnológica para acelerar el desarrollo del frontend y permitir enfocar el esfuerzo principal en la arquitectura del backend.
 
 ## 🏗️ Arquitectura
 
@@ -9,22 +13,21 @@ El frontend sigue una arquitectura modular y componentizada:
 ```
 src/
 ├── components/        # Componentes reutilizables
-│   ├── ImageGallery/
-│   ├── BreedFilter/
-│   ├── BreedSearch/
-│   └── BreedDetails/
+│   ├── ImageGallery.jsx          # Galería masonry de imágenes
+│   ├── ImageGallery.css          # Estilos de la galería
+│   ├── BreedSidebar.jsx          # Sidebar con árbol de razas
+│   ├── BreedSidebar.css          # Estilos del sidebar
+│   └── BreedDetailsDrawer.jsx    # Drawer con detalles de raza
 ├── pages/            # Páginas principales
-│   └── HomePage/
+│   └── HomePage.jsx              # Página principal con layout
 ├── services/         # Servicios API
-│   └── api.js
-├── hooks/            # Custom hooks
-│   ├── useImages.js
-│   ├── useBreeds.js
-│   └── useBreedFilter.js
+│   ├── api.js                    # Cliente Axios configurado
+│   ├── dogService.js             # Servicios específicos de perros
+│   ├── catService.js             # Servicios específicos de gatos
+│   └── petService.js             # Servicio unificado
 ├── utils/            # Utilidades
-│   ├── constants.js
-│   └── helpers.js
-└── types/            # TypeScript types (si se usa TS)
+│   └── constants.js              # Constantes (PET_TYPES, API_BASE)
+└── index.jsx         # Punto de entrada
 ```
 
 ## 🚀 Inicio Rápido
@@ -40,11 +43,13 @@ src/
 npm install
 ```
 
-2. **Configurar variables de entorno**:
+2. **Configurar variables de entorno** (opcional):
 ```bash
-cp .env.example .env
-# Editar .env con la URL del backend
+# Crear archivo .env en la raíz del frontend
+VITE_API_URL=http://localhost:8080/api
 ```
+
+**Nota**: En Vite, las variables de entorno deben comenzar con `VITE_` para ser accesibles en el código del cliente. Si no se configura, el frontend usará `http://localhost:8080/api` por defecto.
 
 3. **Ejecutar en desarrollo**:
 ```bash
@@ -62,60 +67,95 @@ La aplicación estará disponible en `http://localhost:3000`
 
 ## 🎨 Componentes Principales
 
+### HomePage
+Componente principal que contiene el layout de la aplicación:
+- Header con selector de tipo de mascota (perros/gatos)
+- Sidebar colapsable con árbol de razas
+- Área de contenido con la galería de imágenes
+
 ### ImageGallery
-Componente para mostrar la galería de imágenes con paginación.
+Componente para mostrar la galería de imágenes:
+- Layout masonry responsive usando CSS Grid
+- Carga de imágenes aleatorias o filtradas por raza
+- Estados de carga, error y vacío
+- Preview de imágenes al hacer click
+- Click en cards de gatos para ver detalles de raza
 
-### BreedFilter
-Componente para filtrar imágenes por raza con selector de Ant Design.
+### BreedSidebar
+Sidebar con árbol de razas y subrazas:
+- Estructura de árbol usando Ant Design Tree
+- Búsqueda de razas con autocompletado
+- Soporte para subrazas (perros)
+- Selección visual con color coral del tema
+- Auto-expansión al buscar
 
-### BreedSearch
-Componente de búsqueda de razas con autocompletado.
-
-### BreedDetails
-Modal o panel para mostrar detalles de una raza específica.
+### BreedDetailsDrawer
+Drawer lateral para mostrar detalles de razas:
+- Información completa de razas de gatos
+- Características físicas y de comportamiento
+- Enlaces a referencias externas (Wikipedia, etc.)
+- Diseño responsive
 
 ## 🔌 Servicios API
 
-El servicio `api.js` configura Axios con:
+### api.js
+Cliente Axios configurado con:
 - Base URL configurable mediante variable de entorno
 - Timeout de 10 segundos
 - Interceptores para manejo global de errores
 - Headers por defecto
 
-### Uso
+### dogService.js
+Servicios específicos para perros:
+- `getRandomDogImage()`: Imagen aleatoria
+- `getRandomDogImages(limit)`: Múltiples imágenes aleatorias
+- `getDogBreeds()`: Lista de razas
+- `getDogImagesByBreed(breed)`: Imágenes por raza
+- `getDogImagesBySubBreed(breed, subBreed)`: Imágenes por subraza
 
+### catService.js
+Servicios específicos para gatos:
+- `getRandomCatImage()`: Imagen aleatoria
+- `getRandomCatImages(limit)`: Múltiples imágenes aleatorias
+- `getCatBreeds()`: Lista de razas
+- `getCatImagesByBreed(breedId, limit)`: Imágenes por raza
+- `getCatBreedById(breedId)`: Detalles de una raza
+
+### petService.js
+Servicio unificado que abstrae las llamadas a `dogService` y `catService`:
+- `getRandomImages(petType, limit)`: Imágenes aleatorias según tipo
+- `getBreeds(petType)`: Razas según tipo
+- `getImagesByBreed(petType, breed, limit)`: Imágenes por raza
+- `getBreedDetails(petType, breedId)`: Detalles de raza
+
+## 🎨 Ant Design 6
+
+El proyecto utiliza **Ant Design 6** como framework de UI:
+
+### Configuración
+- ConfigProvider con tema personalizado (color primario coral: #FF6B6B)
+- Localización en español
+- Componentes principales utilizados:
+  - `Layout`, `Header`, `Sider`, `Content`: Estructura de página
+  - `Tree`: Árbol de razas y subrazas
+  - `Card`, `Image`: Tarjetas de imágenes
+  - `Drawer`: Panel de detalles
+  - `Input.Search`: Búsqueda de razas
+  - `Radio.Group`: Selector de tipo de mascota
+  - `Spin`: Indicadores de carga
+  - `Empty`: Estados vacíos
+  - `Descriptions`: Detalles de raza
+  - `Tag`: Etiquetas de características
+
+### Tema Personalizado
+El color primario del tema está configurado en `index.jsx`:
 ```javascript
-import apiClient from './services/api';
-
-// Ejemplo de uso
-const fetchImages = async (type, page = 0, limit = 10) => {
-  const response = await apiClient.get('/images', {
-    params: { type, page, limit }
-  });
-  return response.data;
+const theme = {
+  token: {
+    colorPrimary: '#FF6B6B',
+  },
 };
 ```
-
-## 🎣 Custom Hooks
-
-### useImages
-Hook para gestionar el estado y la lógica de las imágenes:
-- Carga de imágenes
-- Paginación
-- Filtrado por raza
-- Manejo de estados de carga y error
-
-### useBreeds
-Hook para gestionar las razas:
-- Carga de lista de razas
-- Búsqueda de razas
-- Filtrado local
-
-### useBreedFilter
-Hook para gestionar el filtro de raza:
-- Estado del filtro activo
-- Cambio de raza
-- Limpieza del filtro
 
 ## 🔧 Configuración
 
@@ -134,8 +174,7 @@ VITE_API_URL=http://localhost:8080/api
 El archivo `vite.config.js` incluye:
 - Plugin de React
 - Puerto 3000 por defecto
-- Apertura automática del navegador en desarrollo
-- Source maps en producción
+- Configuración de desarrollo optimizada
 
 ## 📦 Dependencias Principales
 
@@ -143,60 +182,81 @@ El archivo `vite.config.js` incluye:
 - **react**: ^18.2.0 - Biblioteca de UI
 - **react-dom**: ^18.2.0 - Renderizado de React
 - **react-router-dom**: ^6.20.0 - Enrutamiento
-- **antd**: ^5.11.0 - Componentes UI
+- **antd**: ^6.0.0 - Framework de componentes UI
 - **axios**: ^1.6.2 - Cliente HTTP
-- **@ant-design/icons**: ^5.2.6 - Iconos de Ant Design
+- **@ant-design/icons**: ^6.0.0 - Iconos de Ant Design
+- **react-icons**: ^5.5.0 - Iconos adicionales (FaDog, FaCat)
 
 ### Desarrollo
 - **vite**: ^5.0.8 - Build tool y dev server
 - **@vitejs/plugin-react**: ^4.2.0 - Plugin de React para Vite
 - **eslint**: ^8.55.0 - Linter de código
 
-## 🎨 Ant Design
+## 🎨 Características de UI/UX
 
-El proyecto utiliza **Ant Design 5** como framework de UI:
+### Diseño Responsive
+- Layout adaptativo para desktop, tablet y mobile
+- Sidebar colapsable en pantallas pequeñas
+- Galería masonry que se ajusta al tamaño de pantalla
 
-- Configuración en español mediante `ConfigProvider`
-- Componentes principales:
-  - `Layout`: Estructura de página
-  - `Card`: Tarjetas para imágenes
-  - `Select`: Selector de razas
-  - `Input`: Búsqueda
-  - `Pagination`: Navegación de páginas
-  - `Spin`: Indicadores de carga
-  - `Modal`: Detalles de raza
-  - `Typography`: Texto estilizado
+### Estados de la Aplicación
+- **Loading**: Indicadores de carga durante peticiones
+- **Error**: Mensajes de error claros con opción de reintentar
+- **Empty**: Estados vacíos informativos
 
-## 🚂 Despliegue en Railway
+### Interacciones
+- Hover effects en cards de imágenes
+- Selección visual de razas en el sidebar
+- Preview de imágenes al hacer click
+- Drawer deslizable para detalles de raza
 
-1. Crear un nuevo servicio en Railway
-2. Seleccionar el directorio `frontend/`
-3. Railway detectará automáticamente Node.js
-4. Configurar variables de entorno:
-   - `VITE_API_URL`: URL del backend desplegado en Railway
+### Paleta de Colores
+- Color primario: #FF6B6B (coral)
+- Color hover: #FF5252
+- Fondo: #FAFAFA
+- Superficie: #FFFFFF
+- Sidebar: #F8F9FA
 
-Railway ejecutará automáticamente `npm install` y `npm run build`, y servirá los archivos estáticos.
+## 🚀 Despliegue
 
-## 📱 Responsive Design
+### Build para Producción
 
-La aplicación está diseñada para ser responsive:
-- Desktop: Grid de imágenes con múltiples columnas
-- Tablet: Grid adaptativo
-- Mobile: Una columna con imágenes optimizadas
+```bash
+npm run build
+```
 
-## 🎯 Mejores Prácticas
+Esto generará una carpeta `dist/` con los archivos estáticos listos para desplegar.
 
-- **Componentes funcionales**: Todos los componentes usan funciones y hooks
-- **Custom hooks**: Lógica reutilizable extraída a hooks
-- **Separación de concerns**: Servicios, componentes y lógica separados
-- **Manejo de errores**: Try-catch y estados de error en todos los hooks
-- **Loading states**: Indicadores de carga en todas las operaciones asíncronas
-- **PropTypes/TypeScript**: Validación de tipos (recomendado implementar)
+### Despliegue en Railway / Vercel / Netlify
+
+1. Conectar el repositorio
+2. Configurar el directorio de build como `frontend/`
+3. Configurar variables de entorno:
+   - `VITE_API_URL`: URL del backend desplegado
+4. El servicio ejecutará automáticamente `npm install` y `npm run build`
 
 ## 📝 Notas de Desarrollo
 
 - El proyecto utiliza **Vite** en lugar de Create React App para mejor rendimiento
 - Los componentes están diseñados para ser reutilizables y modulares
-- El estado se gestiona principalmente mediante hooks de React
-- Las llamadas a la API están centralizadas en el servicio `api.js`
+- El estado se gestiona principalmente mediante hooks de React (`useState`, `useEffect`, `useMemo`)
+- Las llamadas a la API están centralizadas en servicios
+- El manejo de errores está implementado en múltiples niveles (servicios, componentes)
+- La aplicación es completamente responsive y funciona en todos los dispositivos
 
+## 🐛 Solución de Problemas
+
+### El frontend no se conecta al backend
+- Verificar que el backend esté corriendo en `http://localhost:8080`
+- Verificar la variable de entorno `VITE_API_URL`
+- Revisar la consola del navegador para errores de CORS
+
+### Las imágenes no cargan
+- Verificar la conexión a internet
+- Revisar la consola del navegador para errores de red
+- Verificar que las APIs externas estén disponibles
+
+### El sidebar no muestra las razas
+- Verificar que el backend esté respondiendo correctamente
+- Revisar la consola del navegador para errores
+- Verificar que el formato de datos sea el esperado
