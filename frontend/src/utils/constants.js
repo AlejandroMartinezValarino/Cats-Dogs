@@ -3,12 +3,12 @@ export const PET_TYPES = {
   CATS: 'cats',
 };
 
-export const API_ENDPOINTS = {
-  IMAGES: '/images',
-  BREEDS: '/breeds',
-  SEARCH: '/search',
+// Endpoints base del backend
+export const API_BASE = {
+  DOGS: '/dogs',
+  CATS: '/cats',
 };
 
 export const DEFAULT_PAGE_SIZE = 10;
-export const MAX_PAGE_SIZE = 25;
+export const MAX_PAGE_SIZE = 50;
 

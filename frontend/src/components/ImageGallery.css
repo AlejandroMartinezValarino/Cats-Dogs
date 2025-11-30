@@ -1,0 +1,46 @@
+.masonry-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 0;
+  }
+  
+  .gallery-item {
+    break-inside: avoid;
+    margin-bottom: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .gallery-item .ant-card-cover {
+    overflow: hidden;
+  }
+  
+  .gallery-item .ant-card-cover img {
+    transition: transform 0.3s ease;
+  }
+  
+  .gallery-item:hover .ant-card-cover img {
+    transform: scale(1.05);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .masonry-gallery {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .masonry-gallery {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }

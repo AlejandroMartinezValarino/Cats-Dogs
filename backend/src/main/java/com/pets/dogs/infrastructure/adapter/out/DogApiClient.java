@@ -36,10 +36,10 @@ public class DogApiClient implements DogApiPort{
             }
             String url = API_URL + "/image/random/" + limit;
             DogApiListResponse response = restTemplate.getForObject(url, DogApiListResponse.class);
-            if (response == null || response.getMessageList() == null) {
-                throw new DogBreedNotFoundException("vacío");
+            if (response == null || response.getMessage() == null) {
+                throw new DogImageNotFoundException("No se encontraron imágenes aleatorias");
             }
-            return response.getMessageList().stream()
+            return response.getMessage().stream()
             .map(u -> DogImage.builder()
             .url(u)
             .build())
@@ -90,10 +90,10 @@ public class DogApiClient implements DogApiPort{
         try{
             String url = API_URL + "/images/breed/" + breed + "/images";
             DogApiListResponse response = restTemplate.getForObject(url, DogApiListResponse.class);
-            if (response == null || response.getMessageList() == null) {
+            if (response == null || response.getMessage() == null) {
                 throw new DogImageNotFoundException("No se encontraron imágenes de perro por raza");
             }
-            return response.getMessageList().stream()
+            return response.getMessage().stream()
             .map(u -> DogImage.builder()
             .url(u)
             .build())
@@ -108,10 +108,10 @@ public class DogApiClient implements DogApiPort{
         try{
             String url = API_URL + "/images/breed/" + breed + "/" + subBreed + "/images";
             DogApiListResponse response = restTemplate.getForObject(url, DogApiListResponse.class); 
-            if (response == null || response.getMessageList() == null) {
+            if (response == null || response.getMessage() == null) {
                 throw new DogImageNotFoundException("No se encontraron imágenes de perro por subraza");
             }
-            return response.getMessageList().stream()
+            return response.getMessage().stream()
             .map(u -> DogImage.builder()
             .url(u)
             .build())
