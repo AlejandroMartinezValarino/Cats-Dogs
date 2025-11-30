@@ -1,0 +1,198 @@
+/* BreedSidebar.css */
+
+.breed-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+/* Input de búsqueda */
+.breed-sidebar .ant-input-search {
+  margin-bottom: 8px;
+}
+
+.breed-sidebar .ant-input-search .ant-input {
+  border-radius: 6px;
+  border-color: #E1E8ED;
+  transition: all 0.3s ease;
+}
+
+.breed-sidebar .ant-input-search .ant-input:hover {
+  border-color: #FF6B6B;
+}
+
+.breed-sidebar .ant-input-search .ant-input:focus {
+  border-color: #FF6B6B;
+  box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+}
+
+.breed-sidebar .ant-input-search .ant-input-affix-wrapper {
+  border-radius: 6px;
+}
+
+/* Botón de limpiar búsqueda */
+.breed-sidebar .ant-input-search .ant-btn {
+  color: #7F8C8D;
+  transition: color 0.2s ease;
+}
+
+.breed-sidebar .ant-input-search .ant-btn:hover {
+  color: #FF6B6B;
+}
+
+/* Tree de razas */
+.breed-sidebar .breed-tree {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  background: transparent;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-content-wrapper {
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-content-wrapper:hover {
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Nodo seleccionado - Color coral del tema */
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper {
+  background-color: #FF6B6B !important;
+  background: #FF6B6B !important;
+  color: #FFFFFF !important;
+  font-weight: 500;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper:hover {
+  background-color: #FF5252 !important;
+  background: #FF5252 !important;
+  color: #FFFFFF !important;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper::before {
+  display: none !important;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-selected {
+  background-color: transparent !important;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper .ant-tree-title,
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper span,
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper * {
+  color: #FFFFFF !important;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-iconEle {
+  color: #FFFFFF !important;
+}
+
+/* Forzar el color coral incluso con estilos inline */
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper[style] {
+  background-color: #FF6B6B !important;
+  background: #FF6B6B !important;
+}
+
+.breed-sidebar .breed-tree .ant-tree-node-selected .ant-tree-node-content-wrapper[style]:hover {
+  background-color: #FF5252 !important;
+  background: #FF5252 !important;
+}
+
+/* Iconos de expand/collapse personalizados */
+.breed-sidebar .breed-tree .ant-tree-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: #7F8C8D;
+  transition: all 0.2s ease;
+}
+
+.breed-sidebar .breed-tree .ant-tree-switcher:hover {
+  color: #FF6B6B;
+}
+
+.breed-sidebar .breed-tree .ant-tree-switcher-open .anticon,
+.breed-sidebar .breed-tree .ant-tree-switcher_close .anticon {
+  font-size: 12px;
+}
+
+/* Indentación para subrazas */
+.breed-sidebar .breed-tree .ant-tree-child-tree {
+  margin-left: 16px;
+}
+
+.breed-sidebar .breed-tree .ant-tree-treenode {
+  padding: 2px 0;
+}
+
+/* Scrollbar personalizado */
+.breed-sidebar .breed-tree::-webkit-scrollbar {
+  width: 6px;
+}
+
+.breed-sidebar .breed-tree::-webkit-scrollbar-track {
+  background: #F8F9FA;
+  border-radius: 3px;
+}
+
+.breed-sidebar .breed-tree::-webkit-scrollbar-thumb {
+  background: #BDC3C7;
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+.breed-sidebar .breed-tree::-webkit-scrollbar-thumb:hover {
+  background: #7F8C8D;
+}
+
+/* Estados de carga y error */
+.breed-sidebar .ant-spin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.breed-sidebar .ant-empty {
+  padding: 40px 0;
+}
+
+.breed-sidebar .ant-empty-description {
+  color: #7F8C8D;
+}
+
+/* Responsive - para pantallas pequeñas */
+@media (max-width: 768px) {
+  .breed-sidebar .breed-tree {
+    max-height: calc(100vh - 180px);
+  }
+  
+  .breed-sidebar .breed-tree .ant-tree-node-content-wrapper {
+    padding: 4px 6px;
+    font-size: 14px;
+  }
+}
+
+/* Animación suave al cargar */
+.breed-sidebar .breed-tree .ant-tree-treenode {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

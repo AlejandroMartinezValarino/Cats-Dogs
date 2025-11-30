@@ -112,14 +112,18 @@ public class CatApiClient implements CatApiPort {
             List<CatBreed> allBreeds = getAllBreeds();
 
             CatBreed foundBreed = allBreeds.stream()
-                .filter(b -> b.getName() != null && b.getName().equalsIgnoreCase(breed))
+                .filter(b -> (b.getId() != null && b.getId().equals(breed)) || 
+                            (b.getName() != null && b.getName().equalsIgnoreCase(breed)))
                 .findFirst()
                 .orElseThrow(() -> new CatBreedNotFoundException("No se encontró la raza: " + breed));
 
+            if (foundBreed.getId() == null) {
+                throw new CatBreedNotFoundException("La raza encontrada no tiene ID válido: " + breed);
+            }
             
             return getImagesByBreedId(foundBreed.getId(), limit);
         } catch (CatBreedNotFoundException e) {
-            throw new CatBreedNotFoundException("No se encontró la raza: " + breed);
+            throw e;
         } catch (RestClientException e) {
             throw new CatApiConnectionException("Error al obtener imágenes por raza: " + e.getMessage(), e);
         }

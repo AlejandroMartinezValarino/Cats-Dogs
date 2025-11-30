@@ -3,6 +3,7 @@ import { Layout, Radio, Typography } from 'antd';
 import { FaDog, FaCat } from 'react-icons/fa';
 import { PET_TYPES } from '../utils/constants';
 import ImageGallery from '../components/ImageGallery';
+import BreedSidebar from '../components/BreedSidebar';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
@@ -46,7 +47,10 @@ const HomePage = () => {
         </Title>
         <Radio.Group
           value={petType}
-          onChange={(e) => setPetType(e.target.value)}
+          onChange={(e) => {
+            setPetType(e.target.value);
+            setSelectedBreed(null);
+          }}
           buttonStyle="solid"
           size="large"
         >
@@ -97,8 +101,12 @@ const HomePage = () => {
             <Title level={5} style={{ color: colors.textPrimary, marginBottom: 16 }}>
               Razas disponibles
             </Title>
-            {/* Aquí irá el componente de búsqueda y lista de razas */}
-            <p style={{ color: colors.textSecondary }}>Lista de razas aquí...</p>
+
+            <BreedSidebar 
+              petType={petType}
+              selectedBreed={selectedBreed}
+              onBreedSelect={setSelectedBreed}
+             />
           </div>
         </Sider>
 

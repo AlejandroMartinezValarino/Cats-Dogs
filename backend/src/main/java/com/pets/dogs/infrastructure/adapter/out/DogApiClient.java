@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class DogApiClient implements DogApiPort{
-    private final String API_URL = "https://dog.ceo/api/breeds";
+    private final String API_BASE_URL = "https://dog.ceo/api";
 
     private final RestTemplate restTemplate;
 
@@ -34,7 +34,7 @@ public class DogApiClient implements DogApiPort{
             if (limit <= 0 || limit > 50) {
                 throw new IllegalArgumentException("El límite debe ser mayor a 0 y menor a 51");
             }
-            String url = API_URL + "/image/random/" + limit;
+            String url = API_BASE_URL + "/breeds/image/random/" + limit;
             DogApiListResponse response = restTemplate.getForObject(url, DogApiListResponse.class);
             if (response == null || response.getMessage() == null) {
                 throw new DogImageNotFoundException("No se encontraron imágenes aleatorias");
@@ -53,7 +53,7 @@ public class DogApiClient implements DogApiPort{
     @Override
     public DogImage getRandomImage() {  
         try{
-            String url = API_URL + "/image/random";
+            String url = API_BASE_URL + "/breeds/image/random";
             DogApiResponse response = restTemplate.getForObject(url, DogApiResponse.class);
             if (response == null || response.getMessage() == null) {
                 throw new DogImageNotFoundException("No se encontró la imagen aleatoria de perro");
@@ -69,7 +69,7 @@ public class DogApiClient implements DogApiPort{
     @Override
     public List<DogBreed> getAllBreeds() {   
         try{ 
-            String url = API_URL + "/list/all";
+            String url = API_BASE_URL + "/breeds/list/all";
             DogApiBreedsResponse response = restTemplate.getForObject(url, DogApiBreedsResponse.class);
             if (response == null || response.getMessage() == null) {
                 throw new DogBreedNotFoundException("vacío");
@@ -88,7 +88,7 @@ public class DogApiClient implements DogApiPort{
     @Override
     public List<DogImage> getImagesByBreed(String breed) {
         try{
-            String url = API_URL + "/images/breed/" + breed + "/images";
+            String url = API_BASE_URL + "/breed/" + breed + "/images";
             DogApiListResponse response = restTemplate.getForObject(url, DogApiListResponse.class);
             if (response == null || response.getMessage() == null) {
                 throw new DogImageNotFoundException("No se encontraron imágenes de perro por raza");
@@ -106,7 +106,7 @@ public class DogApiClient implements DogApiPort{
     @Override
     public List<DogImage> getImagesBySubBreed(String breed, String subBreed) {
         try{
-            String url = API_URL + "/images/breed/" + breed + "/" + subBreed + "/images";
+            String url = API_BASE_URL + "/breed/" + breed + "/" + subBreed + "/images";
             DogApiListResponse response = restTemplate.getForObject(url, DogApiListResponse.class); 
             if (response == null || response.getMessage() == null) {
                 throw new DogImageNotFoundException("No se encontraron imágenes de perro por subraza");

@@ -39,13 +39,18 @@ export const getBreeds = async (petType) => {
 /**
  * Obtiene imágenes filtradas por raza según el tipo de mascota
  * @param {string} petType - 'dogs' o 'cats'
- * @param {string} breed - Nombre o ID de la raza
+ * @param {string} breed - Nombre o ID de la raza (puede ser "breed" o "breed/subbreed" para perros)
  * @param {number} limit - Número de imágenes (solo para gatos)
  * @returns {Promise<Array>}
  */
 export const getImagesByBreed = async (petType, breed, limit = 10) => {
   if (petType === PET_TYPES.DOGS) {
-    return await dogService.getDogImagesByBreed(breed);
+    if (breed.includes('/')) {
+      const [breedName, subBreedName] = breed.split('/');
+      return await dogService.getDogImagesBySubBreed(breedName, subBreedName);
+    } else {
+      return await dogService.getDogImagesByBreed(breed);
+    }
   } else if (petType === PET_TYPES.CATS) {
     return await catService.getCatImagesByBreed(breed, limit);
   }
@@ -60,8 +65,6 @@ export const getImagesByBreed = async (petType, breed, limit = 10) => {
  */
 export const getBreedDetails = async (petType, breedId) => {
   if (petType === PET_TYPES.DOGS) {
-    // Para perros, no hay endpoint de detalles individual, devolvemos null
-    // o podrías buscar en la lista de razas
     const breeds = await dogService.getDogBreeds();
     return breeds.find(b => b.breed === breedId) || null;
   } else if (petType === PET_TYPES.CATS) {
@@ -70,6 +73,5 @@ export const getBreedDetails = async (petType, breedId) => {
   throw new Error(`Tipo de mascota no válido: ${petType}`);
 };
 
-// Exportar también los servicios individuales por si se necesitan
 export { dogService, catService };
 
