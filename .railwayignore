@@ -1,0 +1,43 @@
+# Archivos y directorios a ignorar en Railway
+
+# Node modules (se instalan en Railway)
+node_modules/
+frontend/node_modules/
+
+# Build artifacts
+backend/target/
+frontend/dist/
+frontend/build/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment files (se configuran en Railway)
+.env
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+
+# Features (archivos de especificación, no necesarios en producción)
+features/
+
+# READMEs (opcional, pero pueden ser útiles)
+# README.md
+# backend/README.md
+# frontend/README.md
+

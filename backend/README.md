@@ -257,7 +257,7 @@ logging.level.org.springframework.web=INFO
 ### Variables de Entorno
 
 - `SERVER_PORT` (opcional): Puerto del servidor (default: 8080)
-- `CORS_ALLOWED_ORIGINS` (opcional): Orígenes permitidos para CORS (default: http://localhost:3000)
+- `CORS_ALLOWED_ORIGINS` (opcional): Orígenes permitidos para CORS separados por coma (default: `http://localhost:3000,https://pet-gallery.alejandrotech.eu`)
 
 **Nota**: Las APIs utilizadas ([Dog CEO API](https://dog.ceo/dog-api/) y [The Cat API](https://thecatapi.com/)) son gratuitas y no requieren API keys para uso básico.
 
@@ -355,3 +355,4 @@ mvn test
 - ✅ CORS configurado: Listo para integración con frontend
 - ✅ Arquitectura hexagonal: Implementada en ambas features
 - ✅ Principios SOLID: Aplicados en toda la arquitectura
+- ✅ Configuración Railway: Lista para despliegue

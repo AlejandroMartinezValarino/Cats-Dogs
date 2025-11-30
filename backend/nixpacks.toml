@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ["maven", "jdk21"]
+
+[phases.build]
+cmds = [
+  "./mvnw clean package -DskipTests"
+]
+
+[phases.start]
+cmd = "java -jar target/pet-gallery-backend-1.0.0.jar"
+
+[variables]
+SERVER_PORT = "8080"
+CORS_ALLOWED_ORIGINS = "http://localhost:3000,https://pet-gallery.alejandrotech.eu"
+

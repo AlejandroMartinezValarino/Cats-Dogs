@@ -1,0 +1,17 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "npm"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[phases.start]
+cmd = "npx serve -s dist -l $PORT"
+
+[variables]
+VITE_API_URL = "http://localhost:8080/api"
+NODE_ENV = "production"
+PORT = "3000"
+
