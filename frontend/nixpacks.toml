@@ -11,6 +11,9 @@ cmds = ["npm run build"]
 cmd = "npx serve -s dist -l ${PORT:-3000}"
 
 [variables]
+# VITE_API_URL debe configurarse en Railway con la URL pública del backend
+# Ejemplo: https://cats-dogs-production.up.railway.app/api
+# O si tienes dominio personalizado para el backend: https://api.pet-gallery.alejandrotech.eu/api
 VITE_API_URL = "http://localhost:8080/api"
 NODE_ENV = "production"
 PORT = "3000"
