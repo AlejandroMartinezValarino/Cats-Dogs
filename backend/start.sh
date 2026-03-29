@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script de inicio para Railway
+# Script de inicio para Railway / VPS (sin Docker: usar SPRING_PROFILES_ACTIVE=prod en systemd)
 # Railway asigna automáticamente la variable PORT
 
 # Buscar el JAR ejecutable generado por Spring Boot

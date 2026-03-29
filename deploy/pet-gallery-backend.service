@@ -1,0 +1,19 @@
+# Usuario petgallery y JAR en /opt/pet-gallery/backend/pet-gallery-backend.jar
+# Build: (cd backend && mvn -DskipTests package && cp target/pet-gallery-backend-*.jar .../pet-gallery-backend.jar)
+
+[Unit]
+Description=Pet Gallery Spring Boot API
+After=network.target
+
+[Service]
+Type=simple
+User=petgallery
+Group=petgallery
+WorkingDirectory=/opt/pet-gallery/backend
+EnvironmentFile=-/etc/pet-gallery/backend.env
+ExecStart=/usr/bin/java -jar /opt/pet-gallery/backend/pet-gallery-backend.jar
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
